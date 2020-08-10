@@ -50,7 +50,7 @@ public:
 		return a[i];
 	}
 
-	static void print(Matrix& a) {
+	static void print(Matrix a) {
 		for(int i = 0; i < a.n; i++) {
 			for(int j = 0; j < a.m; j++) {
 				cout << a[i][j] << ' ';
@@ -59,19 +59,19 @@ public:
 		}
 	}
 
-	static Matrix dot(Matrix &a, Matrix &b);
+	static Matrix dot(Matrix a, Matrix b);
 
-	static Matrix sum(Matrix &a, int axis);
+	static Matrix sum(Matrix a, int axis);
 
 	Matrix operator+(float x);
 	Matrix operator-(float x);
 	Matrix operator*(float x);
 	Matrix operator/(float x);
 
-	Matrix operator+(Matrix& b);
-	Matrix operator-(Matrix& b);
-	Matrix operator*(Matrix& b);
-	Matrix operator/(Matrix& b);
+	Matrix operator+(Matrix b);
+	Matrix operator-(Matrix b);
+	Matrix operator*(Matrix b);
+	Matrix operator/(Matrix b);
 
 	Matrix transpose();
 };
@@ -116,7 +116,8 @@ Matrix Matrix::operator/(float x) {
 	return A;
 }
 
-Matrix Matrix::operator+(Matrix& b) {
+Matrix Matrix::operator+(Matrix b) {
+	assert(n == b.n && m == b.m);
 	Matrix A = Matrix(n, m);
 	for(int i = 0; i < n; i++) {
 		for(int j = 0; j < m; j++) {
@@ -126,7 +127,8 @@ Matrix Matrix::operator+(Matrix& b) {
 	return A;
 }
 
-Matrix Matrix::operator-(Matrix& b) {
+Matrix Matrix::operator-(Matrix b) {
+	assert(n == b.n && m == b.m);
 	Matrix A = Matrix(n, m);
 	for(int i = 0; i < n; i++) {
 		for(int j = 0; j < m; j++) {
@@ -136,7 +138,8 @@ Matrix Matrix::operator-(Matrix& b) {
 	return A;
 }
 
-Matrix Matrix::operator*(Matrix& b) {
+Matrix Matrix::operator*(Matrix b) {
+	assert(n == b.n && m == b.m);
 	Matrix A = Matrix(n, m);
 	for(int i = 0; i < n; i++) {
 		for(int j = 0; j < m; j++) {
@@ -146,7 +149,8 @@ Matrix Matrix::operator*(Matrix& b) {
 	return A;
 }
 
-Matrix Matrix::operator/(Matrix& b) {
+Matrix Matrix::operator/(Matrix b) {
+	assert(n == b.n && m == b.m);
 	Matrix A = Matrix(n, m);
 	for(int i = 0; i < n; i++) {
 		for(int j = 0; j < m; j++) {
@@ -166,7 +170,7 @@ Matrix Matrix::transpose() {
 	return A;
 }
 
-Matrix Matrix::sum(Matrix& a, int axis) {
+Matrix Matrix::sum(Matrix a, int axis) {
 	Matrix res;
 	if(axis == 0) {
 		res = Matrix(1, a.m);
@@ -187,11 +191,12 @@ Matrix Matrix::sum(Matrix& a, int axis) {
 	return res;
 }
 
-Matrix Matrix::dot(Matrix& a, Matrix& b) {
+Matrix Matrix::dot(Matrix a, Matrix b) {
+	assert(a.m == b.n);
+	
 	float **Bt = new float*[b.m];
 	float **A = new float*[a.n];
 
-	assert(a.m == b.n);
 	int N = b.n + ((4 - b.n%4) % 4);
 
 	for(int i = 0; i < b.m; i++) {
