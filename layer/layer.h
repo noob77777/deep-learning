@@ -1,3 +1,6 @@
+#ifndef LAYER
+#define LAYER
+
 #include "../matrix/matrix.h"
 #include <math.h>
 
@@ -25,7 +28,7 @@ protected:
 
 public:
 	Layer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0) {
-		W = Matrix(l, l_, true);
+		W = Matrix(l, l_, true) * ((float)sqrt(2.0/l_));
 		b = Matrix(l, 1);
 		this->learning_rate = learning_rate;
 		this->lambda = lambda;
@@ -98,3 +101,41 @@ public:
 			;
 	}
 };
+
+class ReluLayer: public Layer {
+	float relu(float x) {
+		return x > 0 ? x : 0;
+	}
+
+	float relu_derivative(float x) {
+		if(x > 0) return 1;
+		return 0;
+	}
+
+protected:
+	Matrix activation(Matrix Z) {
+		Matrix res = Matrix(Z.n, Z.m);
+		for(int i = 0; i < Z.n; i++) {
+			for(int j = 0; j < Z.m; j++) {
+				res[i][j] = relu(Z[i][j]);
+			}
+		}
+		return res;
+	}
+	Matrix backward_activation(Matrix A) {
+		Matrix res = Matrix(A.n, A.m);
+		for(int i = 0; i < A.n; i++) {
+			for(int j = 0; j < A.m; j++) {
+				res[i][j] = relu_derivative(A[i][j]);
+			}
+		}
+		return res;
+	}
+public:
+	ReluLayer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0): 
+		Layer(l_, l, learning_rate, lambda = 0, keep_prob) {
+			;
+	}
+};
+
+#endif

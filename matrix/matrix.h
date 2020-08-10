@@ -1,3 +1,6 @@
+#ifndef MATRIX
+#define MATRIX
+
 #include <immintrin.h>
 #include <vector>
 #include <iostream>
@@ -62,6 +65,10 @@ public:
 	static Matrix dot(Matrix a, Matrix b);
 
 	static Matrix sum(Matrix a, int axis);
+
+	bool is_shape_equal(Matrix b) {
+		return (n == b.n && m == b.m);
+	}
 
 	Matrix operator+(float x);
 	Matrix operator-(float x);
@@ -245,3 +252,5 @@ Matrix Matrix::dot(Matrix a, Matrix b) {
 
 	return c;
 }
+
+#endif
