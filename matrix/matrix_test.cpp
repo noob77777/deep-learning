@@ -5,8 +5,8 @@
 using namespace std;
 
 int main() {
-	Matrix a = Matrix(100, 500, true);
-	Matrix b = Matrix(500, 100, true);
+	Matrix a = Matrix(100, 500, 'u');
+	Matrix b = Matrix(500, 100, 'n');
 
 	// Matrix::print(m);
 
@@ -24,7 +24,7 @@ int main() {
 		}
 	}
 
-	cout << error;
+	cout << error << endl;
 
 	return 0;
 }

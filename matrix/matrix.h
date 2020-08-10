@@ -36,14 +36,27 @@ class Matrix {
 public:
 	int n; int m;
 	
-	Matrix(int n = 0, int m = 0, bool rand_init = false) {
+	Matrix(int n = 0, int m = 0, char rand_init = 0) {
 		a = vector<vector<float>>(n, vector<float>(m));
 		this->n = n;
 		this->m = m;
-		if(rand_init) {
+
+		if (rand_init == 'u') {
+			default_random_engine generator;
+			uniform_real_distribution<double> distribution(0.0, 1.0);
+
 			for(int i = 0; i < n; i++) {
 				for(int j = 0; j < m; j++) {
-					a[i][j] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+					a[i][j] = static_cast <float> (distribution(generator));
+				}
+			}
+		} else if (rand_init == 'n') {
+			default_random_engine generator;
+			normal_distribution<double> distribution(0.0, 1.0);
+
+			for(int i = 0; i < n; i++) {
+				for(int j = 0; j < m; j++) {
+					a[i][j] = static_cast <float> (distribution(generator));
 				}
 			}
 		}

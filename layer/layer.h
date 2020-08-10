@@ -28,7 +28,7 @@ protected:
 
 public:
 	Layer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0) {
-		W = Matrix(l, l_, true) * ((float)sqrt(2.0/l_));
+		W = Matrix(l, l_, 'n') * ((float)sqrt(2.0/l_));
 		b = Matrix(l, 1);
 		this->learning_rate = learning_rate;
 		this->lambda = lambda;

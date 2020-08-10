@@ -8,7 +8,7 @@ int main() {
 	int m = 1000;
 	float learning_rate = 0.05;
 
-	Matrix X = Matrix(32, m, true);
+	Matrix X = Matrix(32, m, 'u');
 	Matrix Y = Matrix(1, m);
 
 	for(int i = 0; i < m; i++) {
@@ -20,7 +20,7 @@ int main() {
 	Layer *L1 = new SigmoidLayer(32, 16, learning_rate);
 	Layer *L2 = new SigmoidLayer(16, 1, learning_rate);
 
-	for(int i = 0; i < 10000; i++) {
+	for(int i = 0; i < 1000; i++) {
 		Matrix A1 = L1->forward_propagation(X);
 		Matrix A2 = L2->forward_propagation(A1);
 
@@ -29,7 +29,6 @@ int main() {
 
 		Matrix::print(Matrix::sum(A2, 1));
 	}
-
 
 	return 0;
 }
