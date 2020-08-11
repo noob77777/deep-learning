@@ -10,8 +10,8 @@
 
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/vector.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 
 using namespace std;
 
@@ -67,14 +67,14 @@ public:
 	}
 
 	void save(string filename) {
-		ofstream ofs(filename);
-        boost::archive::text_oarchive oa(ofs);
+		ofstream ofs(filename, ofstream::binary);
+        boost::archive::binary_oarchive oa(ofs);
         oa << (*this);
 	}
 
 	void load(string filename) {
 		ifstream ifs(filename);
-        boost::archive::text_iarchive ia(ifs);
+        boost::archive::binary_iarchive ia(ifs, ifstream::binary);
         ia >> (*this);
 	}
 
