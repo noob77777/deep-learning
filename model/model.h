@@ -1,6 +1,8 @@
 #ifndef MODEL
 #define MODEL
 
+#include<fstream>
+
 #include "../matrix/matrix.h"
 #include "../layer/layer.h"
 #include "../loss/loss.h"
@@ -8,6 +10,8 @@
 
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/vector.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 using namespace std;
 
@@ -60,6 +64,18 @@ public:
 			A = layers[i]->forward_propagation(A);
 		}
 		return A;
+	}
+
+	void save(string filename) {
+		ofstream ofs(filename);
+        boost::archive::text_oarchive oa(ofs);
+        oa << (*this);
+	}
+
+	void load(string filename) {
+		ifstream ifs(filename);
+        boost::archive::text_iarchive ia(ifs);
+        ia >> (*this);
 	}
 
 };

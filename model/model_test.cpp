@@ -1,10 +1,6 @@
 #include <bits/stdc++.h>
-#include <fstream>
 
 #include "model.h"
-
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
 
 using namespace std;
 
@@ -32,10 +28,9 @@ int main(int argc, char const *argv[]) {
 	}
 
 	NeuralNetwork nn = NeuralNetwork();
-	nn.add_layer(new ReluLayer(2, 64, LEARNING_RATE));
-	nn.add_layer(new ReluLayer(64, 16, LEARNING_RATE));
+	nn.add_layer(new ReluLayer(2, 32, LEARNING_RATE));
+	nn.add_layer(new ReluLayer(32, 16, LEARNING_RATE));
 	nn.add_layer(new ReluLayer(16, 8, LEARNING_RATE));
-	nn.add_layer(new ReluLayer(8, 8, LEARNING_RATE));
 	nn.add_layer(new SigmoidLayer(8, 1, LEARNING_RATE));
 	nn.add_loss_function(new BinaryCrossEntropyLoss());
 
@@ -65,21 +60,15 @@ int main(int argc, char const *argv[]) {
 	train_accuracy /= M;
 	cout << "Train Accuracy: " << train_accuracy << endl;
 
+
+	//
 	//Serialization-Test
 	cout << "Saving...\n";
-    {
-        ofstream ofs("nn.neuralnetwork");
-        boost::archive::text_oarchive oa(ofs);
-        oa << nn;
-    }
 
+	nn.save("nn.neuralnetwork");
 
-    NeuralNetwork nnNew = NeuralNetwork();
-    {
-        ifstream ifs("nn.neuralnetwork");
-        boost::archive::text_iarchive ia(ifs);
-        ia >> nnNew;
-    }
+	NeuralNetwork nnNew = NeuralNetwork();
+	nnNew.load("nn.neuralnetwork");
 
     Y_pred = nnNew.predict(X_test);
 	Y_pred_train = nnNew.predict(X_train);
@@ -102,6 +91,5 @@ int main(int argc, char const *argv[]) {
 	train_accuracy /= M;
 	cout << "Train Accuracy: " << train_accuracy << endl;
 
-	
 	return 0;
 }
