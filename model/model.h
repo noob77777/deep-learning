@@ -1,17 +1,31 @@
 #ifndef MODEL
 #define MODEL
 
+#include<fstream>
+
 #include "../matrix/matrix.h"
 #include "../layer/layer.h"
 #include "../loss/loss.h"
 #include <math.h>
-#include <vector>
+
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 
 using namespace std;
 
 class NeuralNetwork {
 	vector<Layer *> layers;
 	LossFunction * loss;
+
+	friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+        ar & loss;
+        ar & layers;
+    }
 
 public:
 	void add_layer(Layer * L) {
@@ -50,6 +64,18 @@ public:
 			A = layers[i]->forward_propagation(A);
 		}
 		return A;
+	}
+
+	void save(string filename) {
+		ofstream ofs(filename, ofstream::binary);
+        boost::archive::binary_oarchive oa(ofs);
+        oa << (*this);
+	}
+
+	void load(string filename) {
+		ifstream ifs(filename);
+        boost::archive::binary_iarchive ia(ifs, ifstream::binary);
+        ia >> (*this);
 	}
 
 };

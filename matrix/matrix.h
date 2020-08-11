@@ -2,8 +2,10 @@
 #define MATRIX
 
 #include <immintrin.h>
-#include <vector>
 #include <iostream>
+
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
 
 using namespace std;
 
@@ -30,8 +32,19 @@ float dot_product_intrin(float *a, float *b, int n) {
   	return total;
 }
 
+
+
 class Matrix {
 	vector<vector<float>> a;
+
+	friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+        ar & n;
+        ar & m;
+        ar & a;
+    }
 	
 public:
 	int n; int m;

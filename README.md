@@ -1,7 +1,17 @@
 # deep-learning
 Fast neural networks implementation in C++
 
-### Compile with
+### Compile with build.sh
 ```
-g++ <filename.cpp> -o <out> -march=native -Ofast
+./build.sh
+```
+
+### Prerequisites
+Boost C++
+```
+sudo apt-get install libboost-all-dev
+```
+g++
+```
+sudo apt-get install g++
 ```
