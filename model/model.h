@@ -5,13 +5,23 @@
 #include "../layer/layer.h"
 #include "../loss/loss.h"
 #include <math.h>
-#include <vector>
+
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
 
 using namespace std;
 
 class NeuralNetwork {
 	vector<Layer *> layers;
 	LossFunction * loss;
+
+	friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+        ar & loss;
+        ar & layers;
+    }
 
 public:
 	void add_layer(Layer * L) {

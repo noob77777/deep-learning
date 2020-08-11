@@ -4,9 +4,26 @@
 #include "../matrix/matrix.h"
 #include <math.h>
 
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/export.hpp>
+
 using namespace std;
 
 class Layer {
+	friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+        ar & W;
+        ar & b;
+        ar & A_;
+        ar & Z;
+        ar & D;
+        ar & lambda;
+        ar & keep_prob;
+        ar & learning_rate;
+    }
+
 protected:
 	Matrix W, b, A_, Z, D;
 	float lambda, keep_prob, learning_rate;
@@ -27,6 +44,10 @@ protected:
 	virtual Matrix backward_activation(Matrix A) = 0;
 
 public:
+	Layer() {
+		;
+	}
+
 	Layer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0) {
 		W = Matrix(l, l_, 'n') * ((float)sqrt(2.0/l_));
 		b = Matrix(l, 1);
@@ -77,6 +98,8 @@ float Layer::get_regularization_cost() {
 	return cost;
 }
 
+
+
 class SigmoidLayer: public Layer {
 	float sigmoid(float x) {
 		return (1 / (1 + exp((double) -x)));
@@ -85,6 +108,13 @@ class SigmoidLayer: public Layer {
 	float sigmoid_derivative(float x) {
 		return sigmoid(x) * (1 - sigmoid(x));
 	}
+
+	friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+    	ar & boost::serialization::base_object<Layer>(*this);;
+    }
 
 protected:
 	Matrix activation(Matrix Z) {
@@ -106,11 +136,19 @@ protected:
 		return res;
 	}
 public:
+	SigmoidLayer() {
+		;
+	}
+
 	SigmoidLayer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0): 
 		Layer(l_, l, learning_rate, lambda, keep_prob) {
 			;
 	}
 };
+
+BOOST_CLASS_EXPORT_GUID(SigmoidLayer, "SigmoidLayer")
+
+
 
 class ReluLayer: public Layer {
 	float relu(float x) {
@@ -121,6 +159,13 @@ class ReluLayer: public Layer {
 		if(x > 0) return 1;
 		return 0;
 	}
+
+	friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+    	ar & boost::serialization::base_object<Layer>(*this);
+    }
 
 protected:
 	Matrix activation(Matrix Z) {
@@ -142,10 +187,16 @@ protected:
 		return res;
 	}
 public:
+	ReluLayer() {
+		;
+	}
+
 	ReluLayer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0): 
 		Layer(l_, l, learning_rate, lambda, keep_prob) {
 			;
 	}
 };
+
+BOOST_CLASS_EXPORT_GUID(ReluLayer, "ReluLayer")
 
 #endif
