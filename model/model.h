@@ -24,13 +24,16 @@ public:
 
 	float train_batch(Matrix X, Matrix Y, int num_iterations = 1000) {
 		float cost;
-		for(int _i = 0; _i < num_iterations; _i++){
+		for(int _i = 0; _i < num_iterations; _i++) {
+			float regularization_cost = 0;
 			Matrix A = X;
+
 			for(int i = 0; i < layers.size(); i++) {
 				A = layers[i]->forward_propagation(A);
+				regularization_cost += layers[i]->get_regularization_cost();
 			}
 
-			cost = loss->cost(A, Y);
+			cost = loss->cost(A, Y) + regularization_cost;
 			Matrix dA = loss->derivative(A, Y);
 
 			for(int i = layers.size() - 1; i >= 0; --i) {

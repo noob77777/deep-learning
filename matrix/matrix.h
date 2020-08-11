@@ -94,6 +94,7 @@ public:
 	Matrix operator/(Matrix b);
 
 	Matrix transpose();
+	float norm();
 };
 
 Matrix Matrix::operator+(float x) {
@@ -188,6 +189,16 @@ Matrix Matrix::transpose() {
 		}
 	}
 	return A;
+}
+
+float Matrix::norm() {
+	float res = 0;
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < m; j++) {
+			res += pow(a[i][j], 2);
+		}
+	}
+	return sqrt(res);
 }
 
 Matrix Matrix::sum(Matrix a, int axis) {

@@ -8,6 +8,9 @@ int main() {
 	Matrix a = Matrix(100, 500, 'u');
 	Matrix b = Matrix(500, 100, 'n');
 
+	cout << a.norm() << endl;
+	cout << b.norm() << endl;
+
 	// Matrix::print(m);
 
 	Matrix res = Matrix::dot(a, b);

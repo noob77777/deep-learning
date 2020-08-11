@@ -39,6 +39,8 @@ public:
 
 	Matrix backward_propagation(Matrix dA);
 
+	float get_regularization_cost();
+
 };
 
 void Layer::update_parameters(Matrix dW, Matrix db) {
@@ -57,14 +59,22 @@ Matrix Layer::forward_propagation(Matrix A_) {
 }
 
 Matrix Layer::backward_propagation(Matrix dA) {
+	int m = dA.m;
+
 	Matrix dZ = dA * backward_activation(Z);
-	Matrix dW = Matrix::dot(dZ, A_.transpose());
+	Matrix dW = Matrix::dot(dZ, A_.transpose()) + (W * (lambda / m));
 	Matrix db = Matrix::sum(dZ, 1);
 	Matrix dA_ = Matrix::dot(W.transpose(), dZ);
 
 	update_parameters(dW, db);
 
 	return dA_;
+}
+
+float Layer::get_regularization_cost() {
+	int m = A_.m;
+	float cost = (lambda / (2.0 * m)) * pow(W.norm(), 2);
+	return cost;
 }
 
 class SigmoidLayer: public Layer {
@@ -97,7 +107,7 @@ protected:
 	}
 public:
 	SigmoidLayer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0): 
-		Layer(l_, l, learning_rate, lambda = 0, keep_prob) {
+		Layer(l_, l, learning_rate, lambda, keep_prob) {
 			;
 	}
 };
@@ -133,7 +143,7 @@ protected:
 	}
 public:
 	ReluLayer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0): 
-		Layer(l_, l, learning_rate, lambda = 0, keep_prob) {
+		Layer(l_, l, learning_rate, lambda, keep_prob) {
 			;
 	}
 };
