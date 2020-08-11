@@ -7,20 +7,15 @@ int main() {
 
 	int m = 1000;
 	float learning_rate = 0.05;
+	float lambda = 0.1;
 
 	Matrix X = Matrix(32, m, 'u');
 	Matrix Y = Matrix(1, m);
 
-	for(int i = 0; i < m; i++) {
-		if (X[0][i] + X[1][i] < 1) {
-			Y[0][i] = 1;
-		}
-	}
+	Layer *L1 = new SigmoidLayer(32, 16, learning_rate, lambda);
+	Layer *L2 = new SigmoidLayer(16, 1, learning_rate, lambda);
 
-	Layer *L1 = new SigmoidLayer(32, 16, learning_rate);
-	Layer *L2 = new SigmoidLayer(16, 1, learning_rate);
-
-	for(int i = 0; i < 1000; i++) {
+	for(int i = 0; i < 100; i++) {
 		Matrix A1 = L1->forward_propagation(X);
 		Matrix A2 = L2->forward_propagation(A1);
 
