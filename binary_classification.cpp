@@ -7,7 +7,7 @@
 #define LEARNING_RATE 0.02
 #define LAMBDA 0.1
 
-#define BATCH_ITERATION 1000
+#define BATCH_ITERATION 50
 
 using namespace std;
 
@@ -31,7 +31,7 @@ int main() {
 	nn.add_layer(new SigmoidLayer(8, 1, LEARNING_RATE, LAMBDA));
 	nn.add_loss_function(new BinaryCrossEntropyLoss());
 
-	for(int i = 0; i < 10; i++) {
+	for(int i = 0; i < 5; i++) {
 		float cost = nn.train_batch(X, Y, BATCH_ITERATION);
 		cout << "Cost after " << (i+1)*BATCH_ITERATION << " iterations: " << cost << endl;
 	}

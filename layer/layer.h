@@ -18,15 +18,25 @@ class Layer {
         ar & b;
         ar & A_;
         ar & Z;
-        ar & D;
+        ar & VW;
+        ar & SW;
+        ar & Vb;
+        ar & Sb;
         ar & lambda;
-        ar & keep_prob;
         ar & learning_rate;
+        ar & beta1;
+        ar & beta2;
+        ar & epsilon;
+        ar & bias_counter;
     }
 
 protected:
-	Matrix W, b, A_, Z, D;
-	float lambda, keep_prob, learning_rate;
+	Matrix W, b, A_, Z;
+	Matrix VW, SW, Vb, Sb;
+	float lambda, learning_rate;
+	float beta1, beta2;
+	float epsilon;
+	int bias_counter;
 
 	void update_parameters(Matrix dW, Matrix db);
 
@@ -48,12 +58,17 @@ public:
 		;
 	}
 
-	Layer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0) {
+	Layer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999) {
 		W = Matrix(l, l_, 'n') * ((float)sqrt(2.0/l_));
 		b = Matrix(l, 1);
+		VW = Matrix(l, l_); SW = Matrix(l, l_);
+		Vb = Matrix(l, 1); Sb = Matrix(l, 1);
 		this->learning_rate = learning_rate;
 		this->lambda = lambda;
-		this->keep_prob = keep_prob;
+		this->beta1 = beta1;
+		this->beta2 = beta2;
+		this->epsilon = 1e-8;
+		this->bias_counter = 0;
 	}
 	
 	Matrix forward_propagation(Matrix A_);
@@ -65,8 +80,22 @@ public:
 };
 
 void Layer::update_parameters(Matrix dW, Matrix db) {
-	W = W - (dW * learning_rate);
-	b = b - (db * learning_rate);
+	bias_counter++;
+
+	VW = VW * beta1 + dW * (1.0 - beta1);
+	Vb = Vb * beta1 + db * (1.0 - beta1);
+
+	Matrix VW_corrected = VW / (1 - pow(beta1, bias_counter));
+	Matrix Vb_corrected = Vb / (1 - pow(beta1, bias_counter));
+
+	SW = SW * beta2 + dW.square() * (1.0 - beta2);
+	Sb = Sb * beta2 + db.square() * (1.0 - beta2);
+
+	Matrix SW_corrected = SW / (1 - pow(beta2, bias_counter));
+	Matrix Sb_corrected = Sb / (1 - pow(beta2, bias_counter));
+
+	W = W - ((VW_corrected / (SW_corrected.sqroot() + epsilon)) * learning_rate);
+	b = b - ((Vb_corrected / (Sb_corrected.sqroot() + epsilon)) * learning_rate);
 }
 
 Matrix Layer::forward_propagation(Matrix A_) {
@@ -140,8 +169,8 @@ public:
 		;
 	}
 
-	SigmoidLayer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0): 
-		Layer(l_, l, learning_rate, lambda, keep_prob) {
+	SigmoidLayer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999): 
+		Layer(l_, l, learning_rate, lambda, beta1, beta2) {
 			;
 	}
 };
@@ -191,8 +220,8 @@ public:
 		;
 	}
 
-	ReluLayer(int l_, int l, float learning_rate, float lambda = 0, float keep_prob = 1.0): 
-		Layer(l_, l, learning_rate, lambda, keep_prob) {
+	ReluLayer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999): 
+		Layer(l_, l, learning_rate, lambda, beta1, beta2) {
 			;
 	}
 };

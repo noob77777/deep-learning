@@ -107,6 +107,9 @@ public:
 	Matrix operator/(Matrix b);
 
 	Matrix transpose();
+	Matrix square();
+	Matrix sqroot();
+
 	float norm();
 };
 
@@ -199,6 +202,26 @@ Matrix Matrix::transpose() {
 	for(int i = 0; i < n; i++) {
 		for(int j = 0; j < m; j++) {
 			A[j][i] = a[i][j];
+		}
+	}
+	return A;
+}
+
+Matrix Matrix::square() {
+	Matrix A = Matrix(n, m);
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < m; j++) {
+			A[i][j] = pow(a[i][j], 2);
+		}
+	}
+	return A;
+}
+
+Matrix Matrix::sqroot() {
+	Matrix A = Matrix(n, m);
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < m; j++) {
+			A[i][j] = sqrt(a[i][j]);
 		}
 	}
 	return A;

@@ -5,8 +5,8 @@
 using namespace std;
 
 //hyperparameters
-#define LEARNING_RATE 0.005
-#define BATCH_ITERATION 500
+#define LEARNING_RATE 0.01
+#define BATCH_ITERATION 10
 
 #define M 2000
 #define T 100

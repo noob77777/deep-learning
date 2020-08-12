@@ -5,13 +5,13 @@
 using namespace std;
 
 int main() {
-	Matrix a = Matrix(100, 500, 'u');
-	Matrix b = Matrix(500, 100, 'n');
+	Matrix a = Matrix(10, 50, 'u');
+	Matrix b = Matrix(50, 10, 'n');
 
 	cout << a.norm() << endl;
+	cout << a.square().norm() << endl;
+	cout << a.sqroot().norm() << endl;
 	cout << b.norm() << endl;
-
-	// Matrix::print(m);
 
 	Matrix res = Matrix::dot(a, b);
 

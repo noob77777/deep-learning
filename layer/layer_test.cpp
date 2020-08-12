@@ -19,10 +19,10 @@ int main() {
 		Matrix A1 = L1->forward_propagation(X);
 		Matrix A2 = L2->forward_propagation(A1);
 
+		Matrix::print(Matrix::sum(A2, 1));
+
 		Matrix dA1 = L2->backward_propagation(A2);
 		L1->backward_propagation(dA1);
-
-		Matrix::print(Matrix::sum(A2, 1));
 	}
 
 	return 0;
