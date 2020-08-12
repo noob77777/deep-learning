@@ -15,3 +15,6 @@ g++
 ```
 sudo apt-get install g++
 ```
+
+### Checkout notebook branch
+To test the implementaion with a interactive jupyter notebook
