@@ -4,7 +4,7 @@
 #include "../matrix/matrix.h"
 #include "../layer/layer.h"
 #include "../loss/loss.h"
-#include "../model/model.h"
+#include "../neuralnetwork/neuralnetwork.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -79,7 +79,7 @@ int main() {
     cout << newLptr->get_regularization_cost() << endl;
 
     //
-    //NeuralNetwork -> /model/model_test.cpp
+    //NeuralNetwork -> /neuralnetwork/neuralnetwork_test.cpp
 
     return 0;
 }

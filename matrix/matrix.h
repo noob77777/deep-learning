@@ -34,6 +34,8 @@ float dot_product_intrin(float *a, float *b, int n) {
 
 
 
+default_random_engine generator;
+
 class Matrix {
 	vector<vector<float>> a;
 
@@ -55,7 +57,6 @@ public:
 		this->m = m;
 
 		if (rand_init == 'u') {
-			default_random_engine generator;
 			uniform_real_distribution<double> distribution(0.0, 1.0);
 
 			for(int i = 0; i < n; i++) {
@@ -64,7 +65,6 @@ public:
 				}
 			}
 		} else if (rand_init == 'n') {
-			default_random_engine generator;
 			normal_distribution<double> distribution(0.0, 1.0);
 
 			for(int i = 0; i < n; i++) {

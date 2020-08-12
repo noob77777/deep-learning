@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 
-#include "model.h"
+#include "neuralnetwork.h"
 
 using namespace std;
 
