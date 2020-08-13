@@ -12,18 +12,21 @@ int main() {
 	Matrix X = Matrix(32, m, 'u');
 	Matrix Y = Matrix(1, m);
 
-	Layer *L1 = new SigmoidLayer(32, 16, learning_rate, lambda);
+	Layer *L1 = new ReluLayer(32, 16, learning_rate, lambda);
 	Layer *L2 = new SigmoidLayer(16, 1, learning_rate, lambda);
 
+	float cost;
 	for(int i = 0; i < 100; i++) {
 		Matrix A1 = L1->forward_propagation(X);
-		Matrix A2 = L2->forward_propagation(A1);
+		Matrix A2 = L2->forward_propagation(A1);		
 
-		Matrix::print(Matrix::sum(A2, 1));
+		cost = Matrix::sum(A2, 1)[0][0];
 
 		Matrix dA1 = L2->backward_propagation(A2);
 		L1->backward_propagation(dA1);
 	}
+
+	cout << "Layers work correctly: " << (abs(cost) < 1e-5 ? "Yes" : "No") << endl;
 
 	return 0;
 }
