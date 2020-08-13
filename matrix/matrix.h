@@ -9,25 +9,27 @@
 
 using namespace std;
 
-float dot_product_intrin(float *a, float *b, int n) {
+static inline float _mm256_reduce_add_ps(__m256 x) {
+    const __m128 x128 = _mm_add_ps(_mm256_extractf128_ps(x, 1), _mm256_castps256_ps128(x));
+    const __m128 x64 = _mm_add_ps(x128, _mm_movehl_ps(x128, x128));
+    const __m128 x32 = _mm_add_ss(x64, _mm_shuffle_ps(x64, x64, 0x55));
+    return _mm_cvtss_f32(x32);
+}
 
+static inline float dot_product_intrin(float *a, float *b, int n) {
 	float total;
+	__m256 num1, num2, num3, num4;
 
-	__m128 num1, num2, num3, num4;
+	num4 = _mm256_setzero_ps();
 
-	num4 = _mm_setzero_ps();
-
-  	for(int i = 0; i < n; i += 4) {
-    	num1 = _mm_loadu_ps(a+i);
-    	num2 = _mm_loadu_ps(b+i);
-    	num3 = _mm_mul_ps(num1, num2);
-    	num4 = _mm_add_ps(num4, num3);
+  	for(int i = 0; i < n; i += 8) {
+    	num1 = _mm256_loadu_ps(a+i);
+    	num2 = _mm256_loadu_ps(b+i);
+    	num3 = _mm256_mul_ps(num1, num2);
+    	num4 = _mm256_add_ps(num4, num3);
   	}
 
-  	num4 = _mm_hadd_ps(num4, num4);
-  	num4 = _mm_hadd_ps(num4, num4);
-
-  	_mm_store_ps(&total,num4);
+  	total = _mm256_reduce_add_ps(num4);
 
   	return total;
 }
@@ -264,7 +266,7 @@ Matrix Matrix::dot(Matrix a, Matrix b) {
 	float **Bt = new float*[b.m];
 	float **A = new float*[a.n];
 
-	int N = b.n + ((4 - b.n%4) % 4);
+	int N = b.n + ((8 - b.n%8) % 8);
 
 	for(int i = 0; i < b.m; i++) {
 		Bt[i] = new float[N];
