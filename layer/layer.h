@@ -228,4 +228,57 @@ public:
 
 BOOST_CLASS_EXPORT_GUID(ReluLayer, "ReluLayer")
 
+
+
+class SoftmaxLayer: public Layer {
+	friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+    	ar & boost::serialization::base_object<Layer>(*this);
+    }
+
+protected:
+	Matrix activation(Matrix Z) {
+		Matrix res = Matrix(Z.n, Z.m);
+		for(int j = 0; j < Z.m; j++) {
+			float denominator = 0;
+			for(int i = 0; i < Z.n; i++) {
+				denominator += exp(Z[i][j]);
+			}
+			for(int i = 0; i < Z.n; i++) {
+				res[i][j] = exp(Z[i][j]) / denominator;
+			}
+		}
+		return res;
+	}
+
+	Matrix backward_activation(Matrix A) {
+		Matrix res = Matrix(A.n, A.m);
+		for(int j = 0; j < A.m; j++) {
+			float denominator = 0;
+			for(int i = 0; i < A.n; i++) {
+				denominator += A[i][j];
+			}
+			for(int i = 0; i < A.n; i++) {
+				float x = denominator - A[i][j];
+				res[i][j] = x * A[i][j] / pow(denominator, 2);
+			}
+		}
+		return res;
+	}
+
+public:
+	SoftmaxLayer() {
+		;
+	}
+
+	SoftmaxLayer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999): 
+		Layer(l_, l, learning_rate, lambda, beta1, beta2) {
+			;
+	}
+};
+
+BOOST_CLASS_EXPORT_GUID(SoftmaxLayer, "SoftmaxLayer")
+
 #endif
