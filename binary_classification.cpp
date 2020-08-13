@@ -4,7 +4,7 @@
 #include "./neuralnetwork/neuralnetwork.h"
 
 //hyperparameters
-#define LEARNING_RATE 0.02
+#define LEARNING_RATE 0.01
 #define LAMBDA 0.1
 
 #define BATCH_ITERATION 50

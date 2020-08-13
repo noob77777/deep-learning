@@ -7,7 +7,7 @@
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/export.hpp>
 
-const float ZERO = 0.0000000001;
+const float ZERO = 1e-7;
 
 class LossFunction {
 	friend class boost::serialization::access;
