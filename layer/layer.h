@@ -155,11 +155,11 @@ protected:
 		}
 		return res;
 	}
-	Matrix backward_activation(Matrix A) {
-		Matrix res = Matrix(A.n, A.m);
-		for(int i = 0; i < A.n; i++) {
-			for(int j = 0; j < A.m; j++) {
-				res[i][j] = sigmoid_derivative(A[i][j]);
+	Matrix backward_activation(Matrix Z) {
+		Matrix res = Matrix(Z.n, Z.m);
+		for(int i = 0; i < Z.n; i++) {
+			for(int j = 0; j < Z.m; j++) {
+				res[i][j] = sigmoid_derivative(Z[i][j]);
 			}
 		}
 		return res;
@@ -206,11 +206,11 @@ protected:
 		}
 		return res;
 	}
-	Matrix backward_activation(Matrix A) {
-		Matrix res = Matrix(A.n, A.m);
-		for(int i = 0; i < A.n; i++) {
-			for(int j = 0; j < A.m; j++) {
-				res[i][j] = relu_derivative(A[i][j]);
+	Matrix backward_activation(Matrix Z) {
+		Matrix res = Matrix(Z.n, Z.m);
+		for(int i = 0; i < Z.n; i++) {
+			for(int j = 0; j < Z.m; j++) {
+				res[i][j] = relu_derivative(Z[i][j]);
 			}
 		}
 		return res;
@@ -253,19 +253,9 @@ protected:
 		return res;
 	}
 
-	Matrix backward_activation(Matrix A) {
-		Matrix res = Matrix(A.n, A.m);
-		for(int j = 0; j < A.m; j++) {
-			float denominator = 0;
-			for(int i = 0; i < A.n; i++) {
-				denominator += A[i][j];
-			}
-			for(int i = 0; i < A.n; i++) {
-				float x = denominator - A[i][j];
-				res[i][j] = x * A[i][j] / pow(denominator, 2);
-			}
-		}
-		return res;
+	Matrix backward_activation(Matrix Z) {
+		// works only with SoftmaxCrossEntropy
+		return Matrix(Z.n, Z.m) + 1;
 	}
 
 public:
