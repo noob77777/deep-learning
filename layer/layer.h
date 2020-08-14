@@ -155,11 +155,11 @@ protected:
 		}
 		return res;
 	}
-	Matrix backward_activation(Matrix A) {
-		Matrix res = Matrix(A.n, A.m);
-		for(int i = 0; i < A.n; i++) {
-			for(int j = 0; j < A.m; j++) {
-				res[i][j] = sigmoid_derivative(A[i][j]);
+	Matrix backward_activation(Matrix Z) {
+		Matrix res = Matrix(Z.n, Z.m);
+		for(int i = 0; i < Z.n; i++) {
+			for(int j = 0; j < Z.m; j++) {
+				res[i][j] = sigmoid_derivative(Z[i][j]);
 			}
 		}
 		return res;
@@ -206,11 +206,11 @@ protected:
 		}
 		return res;
 	}
-	Matrix backward_activation(Matrix A) {
-		Matrix res = Matrix(A.n, A.m);
-		for(int i = 0; i < A.n; i++) {
-			for(int j = 0; j < A.m; j++) {
-				res[i][j] = relu_derivative(A[i][j]);
+	Matrix backward_activation(Matrix Z) {
+		Matrix res = Matrix(Z.n, Z.m);
+		for(int i = 0; i < Z.n; i++) {
+			for(int j = 0; j < Z.m; j++) {
+				res[i][j] = relu_derivative(Z[i][j]);
 			}
 		}
 		return res;
@@ -227,5 +227,48 @@ public:
 };
 
 BOOST_CLASS_EXPORT_GUID(ReluLayer, "ReluLayer")
+
+
+
+class SoftmaxLayer: public Layer {
+	friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+    	ar & boost::serialization::base_object<Layer>(*this);
+    }
+
+protected:
+	Matrix activation(Matrix Z) {
+		Matrix res = Matrix(Z.n, Z.m);
+		for(int j = 0; j < Z.m; j++) {
+			float denominator = 0;
+			for(int i = 0; i < Z.n; i++) {
+				denominator += exp(Z[i][j]);
+			}
+			for(int i = 0; i < Z.n; i++) {
+				res[i][j] = exp(Z[i][j]) / denominator;
+			}
+		}
+		return res;
+	}
+
+	Matrix backward_activation(Matrix Z) {
+		// works only with SoftmaxCrossEntropy
+		return Matrix(Z.n, Z.m) + 1;
+	}
+
+public:
+	SoftmaxLayer() {
+		;
+	}
+
+	SoftmaxLayer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999): 
+		Layer(l_, l, learning_rate, lambda, beta1, beta2) {
+			;
+	}
+};
+
+BOOST_CLASS_EXPORT_GUID(SoftmaxLayer, "SoftmaxLayer")
 
 #endif

@@ -32,6 +32,7 @@ class BinaryCrossEntropyLoss: public LossFunction {
     	ar & boost::serialization::base_object<LossFunction>(*this);
     }
 
+public:
 	float cost(Matrix A, Matrix Y) {
 		assert(A.is_shape_equal(Y));
 		float res = 0;
@@ -50,5 +51,35 @@ class BinaryCrossEntropyLoss: public LossFunction {
 };
 
 BOOST_CLASS_EXPORT_GUID(BinaryCrossEntropyLoss, "BinaryCrossEntropyLoss")
+
+
+
+class SoftmaxCrossEntropyLoss: public LossFunction {
+	friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+    	ar & boost::serialization::base_object<LossFunction>(*this);
+    }
+
+public:
+	float cost(Matrix A, Matrix Y) {
+		assert(A.is_shape_equal(Y));
+		float res = 0;
+		for(int i = 0; i < A.n; i++) {
+			for(int j = 0; j < A.m; j++) {
+				res += -(Y[i][j] * log(max(A[i][j], ZERO)));
+			}
+		}
+		return res / A.m;
+	}
+
+	Matrix derivative(Matrix A, Matrix Y) {
+		Matrix res = (A - Y) / A.m;
+		return res;
+	}
+};
+
+BOOST_CLASS_EXPORT_GUID(SoftmaxCrossEntropyLoss, "SoftmaxCrossEntropyLoss")
 
 #endif

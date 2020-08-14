@@ -18,7 +18,7 @@ int main() {
 	float cost;
 	for(int i = 0; i < 100; i++) {
 		Matrix A1 = L1->forward_propagation(X);
-		Matrix A2 = L2->forward_propagation(A1);		
+		Matrix A2 = L2->forward_propagation(A1);
 
 		cost = Matrix::sum(A2, 1)[0][0];
 
