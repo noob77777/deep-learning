@@ -26,7 +26,7 @@ int main() {
 		L1->backward_propagation(dA1);
 	}
 
-	cout << "Layers work correctly: " << (abs(cost) < 10-5 ? "Yes" : "No") << endl;
+	cout << "Layers work correctly: " << (abs(cost) < 1e-5 ? "Yes" : "No") << endl;
 
 	return 0;
 }
