@@ -75,7 +75,7 @@ public:
 	}
 
 	Matrix derivative(Matrix A, Matrix Y) {
-		Matrix res = A - Y;
+		Matrix res = (A - Y) / A.m;
 		return res;
 	}
 };
