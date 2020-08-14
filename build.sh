@@ -8,4 +8,5 @@
 # `g++ ./neuralnetwork/neuralnetwork_test.cpp -o ./neuralnetwork/neuralnetwork_test -Ofast -march=native -lboost_serialization`
 # `g++ ./serialization/serialization_test.cpp -o ./serialization/serialization_test -Ofast -march=native -lboost_serialization`
 # `g++ binary_classification.cpp -o binary_classification -Ofast -march=native -lboost_serialization`
-`g++ classification.cpp -o classification -Ofast -march=native -lboost_serialization`
+# `g++ classification.cpp -o classification -Ofast -march=native -lboost_serialization`
+`g++ mnist_main.cpp -o mnist_main -Ofast -march=native -lboost_serialization`
