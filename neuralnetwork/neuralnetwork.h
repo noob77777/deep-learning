@@ -15,7 +15,7 @@
 
 using namespace std;
 
-/*
+/**
  * NeuralNetwork
  */
 class NeuralNetwork {

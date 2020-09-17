@@ -1,4 +1,4 @@
-/*
+/**
  * 	Building a sample fully connected neural network with 4 layers for
  * 	handwritten digit recognition.
  *	Dataset => mnist. 60000 handwritten 28 px * 28 px greyscale images.

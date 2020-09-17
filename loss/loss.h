@@ -11,7 +11,7 @@ const float ZERO = 1e-7;
 
 
 
-/*
+/**
  *	Abstract class LossFunction is the base class for all loss functions available.
  *	To implement a custom loss function extend this class and override
  * 	the serialize, cost and derivative methods.
@@ -32,7 +32,7 @@ public:
 
 
 
-/*
+/**
  *	Implementation for binary cross entropy loss function.
  *	BinaryCrossEntropyLoss extends LossFunction
  * 	See documentation for more details.
@@ -67,7 +67,7 @@ BOOST_CLASS_EXPORT_GUID(BinaryCrossEntropyLoss, "BinaryCrossEntropyLoss")
 
 
 
-/*
+/**
  * 	Implementation of SoftmaxCrossEntropyLoss for multiclass classifications.
  * 	Works correctly only with Softmax output layer.
  * 	SoftmaxCrossEntropyLoss extends LossFunction

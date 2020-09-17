@@ -9,7 +9,7 @@
 
 using namespace std;
 
-/*
+/**
  *	Dot product of 2 float vectors using SIMD instructions.
  * 	static inline float _mm256_reduce_add_ps(__m256 x) => horizontal addition
  *  static inline float dot_product_intrin(float *a, float *b, int n) => vector dot product
@@ -44,7 +44,7 @@ static inline float dot_product_intrin(float *a, float *b, int n) {
 
 default_random_engine generator;
 
-/*
+/**
  *	Matrix class is the basic computational unit for the entire model.
  */
 class Matrix {
@@ -61,7 +61,7 @@ class Matrix {
     }
 	
 public:
-	/*
+	/**
 	 *	Initialize a n X m matrix with suitable random values.
 	 * 	rand_init = 'u' for uniform distribution between 0 and 1
 	 *	rand_init = 'n' for normal distribution with mean 0 and variance 1
@@ -276,7 +276,7 @@ Matrix Matrix::sum(Matrix a, int axis) {
 	return res;
 }
 
-/*
+/**
  * Product of two matrices with vectorization.
  */
 Matrix Matrix::dot(Matrix a, Matrix b) {

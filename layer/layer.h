@@ -9,7 +9,7 @@
 
 using namespace std;
 
-/*
+/**
  *	Abstract class Layer is the base class for all fully connected layers available.
  *	Extend this class to implement your own custom activation function.
  *	Overide the serialize, activation and backward_activation methods.
@@ -37,7 +37,7 @@ class Layer {
     }
 
 protected:
-	/*
+	/**
 	 * 	W and b are the wieght and bias matrix for the layer.
 	 * 	A_ is previous layer activation cached for back propagation.
 	 * 	Z is given by WA_ + b.
@@ -96,7 +96,7 @@ public:
 
 };
 
-/*
+/**
  *	Implementation of adam optimization algorithm for back propagation.
  */
 void Layer::update_parameters(Matrix dW, Matrix db) {
@@ -119,7 +119,7 @@ void Layer::update_parameters(Matrix dW, Matrix db) {
 	b = b - ((Vb_corrected / (Sb_corrected.sqroot() + epsilon)) * learning_rate);
 }
 
-/*
+/**
  * 	Forward propagation step.
  *	A = g(WA_ + b), where g is activation function and A_ is previous layer activation.
  */
@@ -133,7 +133,7 @@ Matrix Layer::forward_propagation(Matrix A_) {
 	return A;
 }
 
-/*
+/**
  *	Backpropagation step.
  * 	Calculates gradients and updates the weights and biases with regularization cost.
  *	Returns gradient required for previous layer.
@@ -158,7 +158,7 @@ float Layer::get_regularization_cost() {
 }
 
 
-/*
+/**
  * 	Implementation of sigmoid function.
  *	SigmoidLayer extends Layer.
  *	This format can be used to implement any activation function.
@@ -212,7 +212,7 @@ public:
 BOOST_CLASS_EXPORT_GUID(SigmoidLayer, "SigmoidLayer")
 
 
-/*
+/**
  * Implementation of 'relu' function.
  */
 class ReluLayer: public Layer {
@@ -265,7 +265,7 @@ public:
 BOOST_CLASS_EXPORT_GUID(ReluLayer, "ReluLayer")
 
 
-/*
+/**
  * 	Implementation of SoftmaxLayer.
  * 	Notice differences in implementation of the activation and the backward_activation
  * 	methods.
