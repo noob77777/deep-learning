@@ -41,7 +41,7 @@ protected:
 	 * 	W and b are the wieght and bias matrix for the layer.
 	 * 	A_ is previous layer activation cached for back propagation.
 	 * 	Z is given by WA_ + b.
-	 * 	lambda is the regularization hypermarameter for L2 weight decay.
+	 * 	lambda is the regularization hyperparameter for L2 weight decay.
 	 *
 	 * 	Vw, Sw, Vb, Sb, beta1, beta2 and bias_counter are used to implement adam optimizer
 	 * 	where variable names have there usual meaning.
