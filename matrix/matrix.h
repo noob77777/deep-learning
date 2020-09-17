@@ -277,7 +277,7 @@ Matrix Matrix::sum(Matrix a, int axis) {
 }
 
 /**
- * Product of two matrices with vectorization.
+ *	Product of two matrices with vectorization.
  */
 Matrix Matrix::dot(Matrix a, Matrix b) {
 	assert(a.m == b.n);

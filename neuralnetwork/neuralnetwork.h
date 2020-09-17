@@ -16,7 +16,7 @@
 using namespace std;
 
 /**
- * NeuralNetwork
+ *	NeuralNetwork
  */
 class NeuralNetwork {
 	vector<Layer *> layers;

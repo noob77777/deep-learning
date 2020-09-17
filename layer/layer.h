@@ -213,7 +213,7 @@ BOOST_CLASS_EXPORT_GUID(SigmoidLayer, "SigmoidLayer")
 
 
 /**
- * Implementation of 'relu' function.
+ *	Implementation of 'relu' function.
  */
 class ReluLayer: public Layer {
 	float relu(float x) {
