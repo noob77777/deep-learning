@@ -15,12 +15,16 @@
 
 using namespace std;
 
+/*
+ * NeuralNetwork
+ */
 class NeuralNetwork {
 	vector<Layer *> layers;
 	LossFunction * loss;
 
 	friend class boost::serialization::access;
 
+	// Internal method for serialization of class objects.
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version) {
         ar & loss;
@@ -28,14 +32,17 @@ class NeuralNetwork {
     }
 
 public:
+	// Add fully connected layers to the network.
 	void add_layer(Layer * L) {
 		layers.push_back(L);
 	}
 
+	// Add loss function to minimize.
 	void add_loss_function(LossFunction * J) {
 		loss = J;
 	}
 
+	// train for num_iterations for given (X, Y) batches.
 	float train_batch(Matrix X, Matrix Y, int num_iterations = 1000) {
 		float cost;
 		for(int _i = 0; _i < num_iterations; _i++) {
@@ -66,12 +73,14 @@ public:
 		return A;
 	}
 
+	// save the network and its state to file.
 	void save(string filename) {
 		ofstream ofs(filename, ofstream::binary);
         boost::archive::binary_oarchive oa(ofs);
         oa << (*this);
 	}
 
+	// load a pre-trained network from file.
 	void load(string filename) {
 		ifstream ifs(filename);
         boost::archive::binary_iarchive ia(ifs, ifstream::binary);

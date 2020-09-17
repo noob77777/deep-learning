@@ -9,6 +9,12 @@
 
 using namespace std;
 
+/*
+ *	Dot product of 2 float vectors using SIMD instructions.
+ * 	static inline float _mm256_reduce_add_ps(__m256 x) => horizontal addition
+ *  static inline float dot_product_intrin(float *a, float *b, int n) => vector dot product
+ * 	n must be multiple of 8.
+ */
 static inline float _mm256_reduce_add_ps(__m256 x) {
     const __m128 x128 = _mm_add_ps(_mm256_extractf128_ps(x, 1), _mm256_castps256_ps128(x));
     const __m128 x64 = _mm_add_ps(x128, _mm_movehl_ps(x128, x128));
@@ -38,11 +44,15 @@ static inline float dot_product_intrin(float *a, float *b, int n) {
 
 default_random_engine generator;
 
+/*
+ *	Matrix class is the basic computational unit for the entire model.
+ */
 class Matrix {
 	vector<vector<float>> a;
 
 	friend class boost::serialization::access;
 
+	// Internal method to serialize the class object.
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version) {
         ar & n;
@@ -51,6 +61,12 @@ class Matrix {
     }
 	
 public:
+	/*
+	 *	Initialize a n X m matrix with suitable random values.
+	 * 	rand_init = 'u' for uniform distribution between 0 and 1
+	 *	rand_init = 'n' for normal distribution with mean 0 and variance 1
+	 * 	default rand_init = 0 for zero initialization.
+	 */
 	int n; int m;
 	
 	Matrix(int n = 0, int m = 0, char rand_init = 0) {
@@ -260,6 +276,9 @@ Matrix Matrix::sum(Matrix a, int axis) {
 	return res;
 }
 
+/*
+ * Product of two matrices with vectorization.
+ */
 Matrix Matrix::dot(Matrix a, Matrix b) {
 	assert(a.m == b.n);
 	

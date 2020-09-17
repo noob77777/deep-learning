@@ -1,3 +1,14 @@
+/*
+ * 	Building a sample fully connected neural network with 4 layers for
+ * 	handwritten digit recognition.
+ *	Dataset => mnist. 60000 handwritten 28 px * 28 px greyscale images.
+ * 	Architecture:
+ *	Flattened Image => Relu[128] => Relu[64] => Relu[32] => Softmax[10]
+ *
+ *	94% Accuracy of test set.
+ * 	< 3 sec training time.
+ */
+
 #include <bits/stdc++.h>
 #include <fstream>
 

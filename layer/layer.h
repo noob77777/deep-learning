@@ -9,9 +9,15 @@
 
 using namespace std;
 
+/*
+ *	Abstract class Layer is the base class for all fully connected layers available.
+ *	Extend this class to implement your own custom activation function.
+ *	Overide the serialize, activation and backward_activation methods.
+ */
 class Layer {
 	friend class boost::serialization::access;
 
+	// Internal method to serialize the class object.
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version) {
         ar & W;
@@ -31,6 +37,17 @@ class Layer {
     }
 
 protected:
+	/*
+	 * 	W and b are the wieght and bias matrix for the layer.
+	 * 	A_ is previous layer activation cached for back propagation.
+	 * 	Z is given by WA_ + b.
+	 * 	lambda is the regularization hypermarameter for L2 weight decay.
+	 *
+	 * 	Vw, Sw, Vb, Sb, beta1, beta2 and bias_counter are used to implement adam optimizer
+	 * 	where variable names have there usual meaning.
+	 *	See documentation for more details on the back propagation algorithm.
+	 */
+
 	Matrix W, b, A_, Z;
 	Matrix VW, SW, Vb, Sb;
 	float lambda, learning_rate;
@@ -79,7 +96,11 @@ public:
 
 };
 
+/*
+ *	Implementation of adam optimization algorithm for back propagation.
+ */
 void Layer::update_parameters(Matrix dW, Matrix db) {
+
 	bias_counter++;
 
 	VW = VW * beta1 + dW * (1.0 - beta1);
@@ -98,6 +119,10 @@ void Layer::update_parameters(Matrix dW, Matrix db) {
 	b = b - ((Vb_corrected / (Sb_corrected.sqroot() + epsilon)) * learning_rate);
 }
 
+/*
+ * 	Forward propagation step.
+ *	A = g(WA_ + b), where g is activation function and A_ is previous layer activation.
+ */
 Matrix Layer::forward_propagation(Matrix A_) {
 	this->A_ = A_;
 	int m = A_.m;
@@ -108,6 +133,11 @@ Matrix Layer::forward_propagation(Matrix A_) {
 	return A;
 }
 
+/*
+ *	Backpropagation step.
+ * 	Calculates gradients and updates the weights and biases with regularization cost.
+ *	Returns gradient required for previous layer.
+ */
 Matrix Layer::backward_propagation(Matrix dA) {
 	int m = dA.m;
 
@@ -128,7 +158,11 @@ float Layer::get_regularization_cost() {
 }
 
 
-
+/*
+ * 	Implementation of sigmoid function.
+ *	SigmoidLayer extends Layer.
+ *	This format can be used to implement any activation function.
+ */
 class SigmoidLayer: public Layer {
 	float sigmoid(float x) {
 		return (1 / (1 + exp((double) -x)));
@@ -178,7 +212,9 @@ public:
 BOOST_CLASS_EXPORT_GUID(SigmoidLayer, "SigmoidLayer")
 
 
-
+/*
+ * Implementation of 'relu' function.
+ */
 class ReluLayer: public Layer {
 	float relu(float x) {
 		return x > 0 ? x : 0;
@@ -229,7 +265,12 @@ public:
 BOOST_CLASS_EXPORT_GUID(ReluLayer, "ReluLayer")
 
 
-
+/*
+ * 	Implementation of SoftmaxLayer.
+ * 	Notice differences in implementation of the activation and the backward_activation
+ * 	methods.
+ *	This layer only works correctly with SoftmaxCrossEntropyLoss.
+ */
 class SoftmaxLayer: public Layer {
 	friend class boost::serialization::access;
 
