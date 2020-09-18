@@ -16,11 +16,21 @@ g++
 ```
 sudo apt-get install g++
 ```
+<br />
+
+## Sample: *Building a neural network in 5 lines of code.*
+```
+NeuralNetwork nn = NeuralNetwork();
+nn.add_layer(new ReluLayer(28 * 28, 128, LEARNING_RATE, LAMBDA));
+nn.add_layer(new ReluLayer(128, 32, LEARNING_RATE, LAMBDA));
+nn.add_layer(new SoftmaxLayer(32, 10, LEARNING_RATE, LAMBDA));
+nn.add_loss_function(new SoftmaxCrossEntropyLoss());
+```
 
 ### Checkout notebook branch
 Test the implementation with an interactive jupyter notebook
 
-
+<br />
 
 # Documentation
 ## Building blocks of the model
@@ -107,13 +117,11 @@ Test the implementation with an interactive jupyter notebook
     6. `void load(string filename);`<br />
         *Loads a pre-trained network from file.*
         
-    ### Sample: *Building a neural network in 6 lines of code.*
-    ```
-    NeuralNetwork nn = NeuralNetwork();
-	nn.add_layer(new ReluLayer(28 * 28, 128, LEARNING_RATE, LAMBDA));
-	nn.add_layer(new ReluLayer(128, 64, LEARNING_RATE, LAMBDA));
-	nn.add_layer(new ReluLayer(64, 32, LEARNING_RATE, LAMBDA));
-	nn.add_layer(new SoftmaxLayer(32, 10, LEARNING_RATE, LAMBDA));
-	nn.add_loss_function(new SoftmaxCrossEntropyLoss());
-    ```
-        
+## Sample: *Logistic Regression*
+```
+NeuralNetwork nn = NeuralNetwork();
+nn.add_layer(new SigmoidLayer(NUM_INPUTS, 1, LEARNING_RATE, LAMBDA));
+nn.add_loss_function(new BinaryCrossEntropyLoss());
+nn.train_batch(X_train, Y_train, 1000);
+Matrix Y_pred = nn.predict(X_test);
+```
