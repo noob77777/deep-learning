@@ -5,20 +5,21 @@
 
 #include "./common.h"
 
-
-int main() {
+int main()
+{
 	int fd = open("./testdata", O_RDONLY);
 
 	int n;
 	read(fd, (void *)&n, 4);
-	
+
 	printf("%d\n", n);
 
-	float **a = (float **)malloc(n*sizeof(float *));
-	float **b = (float **)malloc(n*sizeof(float *));
-	for(int i = 0; i < n; i++) {
-		a[i] = (float *)malloc(n*4);
-		b[i] = (float *)malloc(n*4);
+	float **a = (float **)malloc(n * sizeof(float *));
+	float **b = (float **)malloc(n * sizeof(float *));
+	for (int i = 0; i < n; i++)
+	{
+		a[i] = (float *)malloc(n * 4);
+		b[i] = (float *)malloc(n * 4);
 	}
 
 	int fd1 = open("./baseresult", O_RDONLY);

@@ -5,33 +5,38 @@
 
 #include "./common.h"
 
-void multiply(float **a, float **b, float **c, int n) {
-	for(int i = 0; i < n; i++) {
-		for(int j = 0; j < n; j++) {
+void multiply(float **a, float **b, float **c, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
 			c[i][j] = 0;
-			for(int k = 0; k < n; k++) {
+			for (int k = 0; k < n; k++)
+			{
 				c[i][j] += a[i][k] * b[k][j];
 			}
 		}
 	}
 }
 
-
-int main() {
+int main()
+{
 	int fd = open("./testdata", O_RDONLY);
 
 	int n;
 	read(fd, (void *)&n, 4);
-	
+
 	printf("%d\n", n);
 
-	float **a = (float **)malloc(n*sizeof(float *));
-	float **b = (float **)malloc(n*sizeof(float *));
-	float **c = (float **)malloc(n*sizeof(float *));
-	for(int i = 0; i < n; i++) {
-		a[i] = (float *)malloc(n*4);
-		b[i] = (float *)malloc(n*4);
-		c[i] = (float *)malloc(n*4); 
+	float **a = (float **)malloc(n * sizeof(float *));
+	float **b = (float **)malloc(n * sizeof(float *));
+	float **c = (float **)malloc(n * sizeof(float *));
+	for (int i = 0; i < n; i++)
+	{
+		a[i] = (float *)malloc(n * 4);
+		b[i] = (float *)malloc(n * 4);
+		c[i] = (float *)malloc(n * 4);
 	}
 
 	read_data(fd, a, n);

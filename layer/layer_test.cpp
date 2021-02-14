@@ -3,8 +3,8 @@
 
 using namespace std;
 
-int main() {
-
+int main()
+{
 	int m = 1000;
 	float learning_rate = 0.05;
 	float lambda = 0.1;
@@ -16,7 +16,8 @@ int main() {
 	Layer *L2 = new SigmoidLayer(16, 1, learning_rate, lambda);
 
 	float cost;
-	for(int i = 0; i < 100; i++) {
+	for (int i = 0; i < 100; i++)
+	{
 		Matrix A1 = L1->forward_propagation(X);
 		Matrix A2 = L2->forward_propagation(A1);
 

@@ -4,7 +4,8 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
 	Matrix a = Matrix(10, 50, 'u');
 	Matrix b = Matrix(50, 10, 'n');
 
@@ -16,8 +17,10 @@ int main() {
 	res = a.square();
 	res2 = a.sqroot();
 
-	for(int i = 0; i < a.n; i++) {
-		for(int j= 0; j < a.m; j++) {
+	for (int i = 0; i < a.n; i++)
+	{
+		for (int j = 0; j < a.m; j++)
+		{
 			norm += pow(a[i][j], 2);
 			square += pow(res[i][j] - pow(a[i][j], 2), 2);
 			sqroot += pow(res2[i][j] - sqrt(a[i][j]), 2);
@@ -34,8 +37,10 @@ int main() {
 
 	float mean2 = 0;
 
-	for(int i = 0; i < b.n; i++) {
-		for(int j = 0; j < b.m; j++) {
+	for (int i = 0; i < b.n; i++)
+	{
+		for (int j = 0; j < b.m; j++)
+		{
 			mean2 += b[i][j];
 		}
 	}
@@ -48,9 +53,12 @@ int main() {
 	res = Matrix::dot(a, b);
 	res_test = Matrix(a.n, b.m);
 
-	for(int i = 0; i < a.n; i++) {
-		for(int j = 0; j < b.m; j++) {
-			for(int k = 0; k < a.m; k++) {
+	for (int i = 0; i < a.n; i++)
+	{
+		for (int j = 0; j < b.m; j++)
+		{
+			for (int k = 0; k < a.m; k++)
+			{
 				res_test[i][j] += a[i][k] * b[k][j];
 			}
 			error += pow(res_test[i][j] - res[i][j], 2);
@@ -62,17 +70,21 @@ int main() {
 	//sum
 	float sum1 = 0, sum2 = 0;
 	res = Matrix::sum(a, 1);
-	for(int i = 0; i < a.n; i++) {
+	for (int i = 0; i < a.n; i++)
+	{
 		float s = 0;
-		for(int j = 0; j < a.m; j++) {
+		for (int j = 0; j < a.m; j++)
+		{
 			s += a[i][j];
 		}
 		sum1 += pow(res[i][0] - s, 2);
 	}
 	res = Matrix::sum(a, 0);
-	for(int j = 0; j < a.m; j++) {
+	for (int j = 0; j < a.m; j++)
+	{
 		float s = 0;
-		for(int i = 0; i < a.n; i++) {
+		for (int i = 0; i < a.n; i++)
+		{
 			s += a[i][j];
 		}
 		sum2 += pow(res[0][j] - s, 2);

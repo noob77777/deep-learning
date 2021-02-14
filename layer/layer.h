@@ -14,27 +14,29 @@ using namespace std;
  *	Extend this class to implement your own custom activation function.
  *	Overide the serialize, activation and backward_activation methods.
  */
-class Layer {
+class Layer
+{
 	friend class boost::serialization::access;
 
 	// Internal method to serialize the class object.
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int version) {
-        ar & W;
-        ar & b;
-        ar & A_;
-        ar & Z;
-        ar & VW;
-        ar & SW;
-        ar & Vb;
-        ar & Sb;
-        ar & lambda;
-        ar & learning_rate;
-        ar & beta1;
-        ar & beta2;
-        ar & epsilon;
-        ar & bias_counter;
-    }
+	template <class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar &W;
+		ar &b;
+		ar &A_;
+		ar &Z;
+		ar &VW;
+		ar &SW;
+		ar &Vb;
+		ar &Sb;
+		ar &lambda;
+		ar &learning_rate;
+		ar &beta1;
+		ar &beta2;
+		ar &epsilon;
+		ar &bias_counter;
+	}
 
 protected:
 	/**
@@ -57,10 +59,13 @@ protected:
 
 	void update_parameters(Matrix dW, Matrix db);
 
-	Matrix get_expanded_b(int m) {
+	Matrix get_expanded_b(int m)
+	{
 		Matrix b_ = Matrix(b.n, m);
-		for(int i = 0; i < b.n; i++) {
-			for(int j = 0; j < m; j++) {
+		for (int i = 0; i < b.n; i++)
+		{
+			for (int j = 0; j < m; j++)
+			{
 				b_[i][j] = b[i][0];
 			}
 		}
@@ -71,15 +76,19 @@ protected:
 	virtual Matrix backward_activation(Matrix A) = 0;
 
 public:
-	Layer() {
+	Layer()
+	{
 		;
 	}
 
-	Layer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999) {
-		W = Matrix(l, l_, 'n') * ((float)sqrt(2.0/l_));
+	Layer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999)
+	{
+		W = Matrix(l, l_, 'n') * ((float)sqrt(2.0 / l_));
 		b = Matrix(l, 1);
-		VW = Matrix(l, l_); SW = Matrix(l, l_);
-		Vb = Matrix(l, 1); Sb = Matrix(l, 1);
+		VW = Matrix(l, l_);
+		SW = Matrix(l, l_);
+		Vb = Matrix(l, 1);
+		Sb = Matrix(l, 1);
 		this->learning_rate = learning_rate;
 		this->lambda = lambda;
 		this->beta1 = beta1;
@@ -87,19 +96,19 @@ public:
 		this->epsilon = 1e-8;
 		this->bias_counter = 0;
 	}
-	
+
 	Matrix forward_propagation(Matrix A_);
 
 	Matrix backward_propagation(Matrix dA);
 
 	float get_regularization_cost();
-
 };
 
 /**
  *	Implementation of adam optimization algorithm for back propagation.
  */
-void Layer::update_parameters(Matrix dW, Matrix db) {
+void Layer::update_parameters(Matrix dW, Matrix db)
+{
 
 	bias_counter++;
 
@@ -123,7 +132,8 @@ void Layer::update_parameters(Matrix dW, Matrix db) {
  * 	Forward propagation step.
  *	A = g(WA_ + b), where g is activation function and A_ is previous layer activation.
  */
-Matrix Layer::forward_propagation(Matrix A_) {
+Matrix Layer::forward_propagation(Matrix A_)
+{
 	this->A_ = A_;
 	int m = A_.m;
 
@@ -138,7 +148,8 @@ Matrix Layer::forward_propagation(Matrix A_) {
  * 	Calculates gradients and updates the weights and biases with regularization cost.
  *	Returns gradient required for previous layer.
  */
-Matrix Layer::backward_propagation(Matrix dA) {
+Matrix Layer::backward_propagation(Matrix dA)
+{
 	int m = dA.m;
 
 	Matrix dZ = dA * backward_activation(Z);
@@ -151,119 +162,143 @@ Matrix Layer::backward_propagation(Matrix dA) {
 	return dA_;
 }
 
-float Layer::get_regularization_cost() {
+float Layer::get_regularization_cost()
+{
 	int m = A_.m;
 	float cost = (lambda / (2.0 * m)) * pow(W.norm(), 2);
 	return cost;
 }
-
 
 /**
  * 	Implementation of sigmoid function.
  *	SigmoidLayer extends Layer.
  *	This format can be used to implement any activation function.
  */
-class SigmoidLayer: public Layer {
-	float sigmoid(float x) {
-		return (1 / (1 + exp((double) -x)));
+class SigmoidLayer : public Layer
+{
+	float sigmoid(float x)
+	{
+		return (1 / (1 + exp((double)-x)));
 	}
 
-	float sigmoid_derivative(float x) {
+	float sigmoid_derivative(float x)
+	{
 		return sigmoid(x) * (1 - sigmoid(x));
 	}
 
 	friend class boost::serialization::access;
 
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int version) {
-    	ar & boost::serialization::base_object<Layer>(*this);;
-    }
+	template <class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar &boost::serialization::base_object<Layer>(*this);
+		;
+	}
 
 protected:
-	Matrix activation(Matrix Z) {
+	Matrix activation(Matrix Z)
+	{
 		Matrix res = Matrix(Z.n, Z.m);
-		for(int i = 0; i < Z.n; i++) {
-			for(int j = 0; j < Z.m; j++) {
+		for (int i = 0; i < Z.n; i++)
+		{
+			for (int j = 0; j < Z.m; j++)
+			{
 				res[i][j] = sigmoid(Z[i][j]);
 			}
 		}
 		return res;
 	}
-	Matrix backward_activation(Matrix Z) {
+	Matrix backward_activation(Matrix Z)
+	{
 		Matrix res = Matrix(Z.n, Z.m);
-		for(int i = 0; i < Z.n; i++) {
-			for(int j = 0; j < Z.m; j++) {
+		for (int i = 0; i < Z.n; i++)
+		{
+			for (int j = 0; j < Z.m; j++)
+			{
 				res[i][j] = sigmoid_derivative(Z[i][j]);
 			}
 		}
 		return res;
 	}
+
 public:
-	SigmoidLayer() {
+	SigmoidLayer()
+	{
 		;
 	}
 
-	SigmoidLayer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999): 
-		Layer(l_, l, learning_rate, lambda, beta1, beta2) {
-			;
+	SigmoidLayer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999) : Layer(l_, l, learning_rate, lambda, beta1, beta2)
+	{
+		;
 	}
 };
 
 BOOST_CLASS_EXPORT_GUID(SigmoidLayer, "SigmoidLayer")
 
-
 /**
  *	Implementation of 'relu' function.
  */
-class ReluLayer: public Layer {
-	float relu(float x) {
+class ReluLayer : public Layer
+{
+	float relu(float x)
+	{
 		return x > 0 ? x : 0;
 	}
 
-	float relu_derivative(float x) {
-		if(x > 0) return 1;
+	float relu_derivative(float x)
+	{
+		if (x > 0)
+			return 1;
 		return 0;
 	}
 
 	friend class boost::serialization::access;
 
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int version) {
-    	ar & boost::serialization::base_object<Layer>(*this);
-    }
+	template <class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar &boost::serialization::base_object<Layer>(*this);
+	}
 
 protected:
-	Matrix activation(Matrix Z) {
+	Matrix activation(Matrix Z)
+	{
 		Matrix res = Matrix(Z.n, Z.m);
-		for(int i = 0; i < Z.n; i++) {
-			for(int j = 0; j < Z.m; j++) {
+		for (int i = 0; i < Z.n; i++)
+		{
+			for (int j = 0; j < Z.m; j++)
+			{
 				res[i][j] = relu(Z[i][j]);
 			}
 		}
 		return res;
 	}
-	Matrix backward_activation(Matrix Z) {
+	Matrix backward_activation(Matrix Z)
+	{
 		Matrix res = Matrix(Z.n, Z.m);
-		for(int i = 0; i < Z.n; i++) {
-			for(int j = 0; j < Z.m; j++) {
+		for (int i = 0; i < Z.n; i++)
+		{
+			for (int j = 0; j < Z.m; j++)
+			{
 				res[i][j] = relu_derivative(Z[i][j]);
 			}
 		}
 		return res;
 	}
+
 public:
-	ReluLayer() {
+	ReluLayer()
+	{
 		;
 	}
 
-	ReluLayer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999): 
-		Layer(l_, l, learning_rate, lambda, beta1, beta2) {
-			;
+	ReluLayer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999) : Layer(l_, l, learning_rate, lambda, beta1, beta2)
+	{
+		;
 	}
 };
 
 BOOST_CLASS_EXPORT_GUID(ReluLayer, "ReluLayer")
-
 
 /**
  * 	Implementation of SoftmaxLayer.
@@ -271,42 +306,50 @@ BOOST_CLASS_EXPORT_GUID(ReluLayer, "ReluLayer")
  * 	methods.
  *	This layer only works correctly with SoftmaxCrossEntropyLoss.
  */
-class SoftmaxLayer: public Layer {
+class SoftmaxLayer : public Layer
+{
 	friend class boost::serialization::access;
 
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int version) {
-    	ar & boost::serialization::base_object<Layer>(*this);
-    }
+	template <class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar &boost::serialization::base_object<Layer>(*this);
+	}
 
 protected:
-	Matrix activation(Matrix Z) {
+	Matrix activation(Matrix Z)
+	{
 		Matrix res = Matrix(Z.n, Z.m);
-		for(int j = 0; j < Z.m; j++) {
+		for (int j = 0; j < Z.m; j++)
+		{
 			float denominator = 0;
-			for(int i = 0; i < Z.n; i++) {
+			for (int i = 0; i < Z.n; i++)
+			{
 				denominator += exp(Z[i][j]);
 			}
-			for(int i = 0; i < Z.n; i++) {
+			for (int i = 0; i < Z.n; i++)
+			{
 				res[i][j] = exp(Z[i][j]) / denominator;
 			}
 		}
 		return res;
 	}
 
-	Matrix backward_activation(Matrix Z) {
+	Matrix backward_activation(Matrix Z)
+	{
 		// works only with SoftmaxCrossEntropy
 		return Matrix(Z.n, Z.m) + 1;
 	}
 
 public:
-	SoftmaxLayer() {
+	SoftmaxLayer()
+	{
 		;
 	}
 
-	SoftmaxLayer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999): 
-		Layer(l_, l, learning_rate, lambda, beta1, beta2) {
-			;
+	SoftmaxLayer(int l_, int l, float learning_rate, float lambda = 0, float beta1 = 0.9, float beta2 = 0.999) : Layer(l_, l, learning_rate, lambda, beta1, beta2)
+	{
+		;
 	}
 };
 

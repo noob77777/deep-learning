@@ -11,7 +11,8 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     //
     //Matrix
 
@@ -59,7 +60,7 @@ int main() {
     //
     //Layer *
 
-    Layer * Lptr = new ReluLayer(5, 2, 0.01, 1.0);
+    Layer *Lptr = new ReluLayer(5, 2, 0.01, 1.0);
     Lptr->forward_propagation(matrix);
     {
         ofstream ofs("layer_pointer");
@@ -69,7 +70,7 @@ int main() {
 
     cout << Lptr->get_regularization_cost() << ' ';
 
-    Layer * newLptr;
+    Layer *newLptr;
     {
         ifstream ifs("layer_pointer");
         boost::archive::text_iarchive ia(ifs);
